@@ -6,10 +6,10 @@
     ],
     "type": "library",
     "license": "MIT",
-    "homepage": "https://github.com/sepiphy/laraveltools",
+    "homepage": "https://github.com/sepiphy/laratools",
     "support": {
-        "issues": "https://github.com/sepiphy/laraveltools/issues",
-        "source": "https://github.com/sepiphy/laraveltools"
+        "issues": "https://github.com/sepiphy/laratools/issues",
+        "source": "https://github.com/sepiphy/laratools"
     },
     "authors": [
         {
