@@ -28,7 +28,7 @@ class Role extends Model
      */
     public function users()
     {
-        return $this->hasMany(Config::get('acl.eloquent.user'));
+        return $this->belongsToMany(Config::get('acl.eloquent.user'));
     }
 
     /**
