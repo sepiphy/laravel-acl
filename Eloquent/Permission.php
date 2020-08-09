@@ -20,7 +20,7 @@ class Permission extends Model
     /**
      * @var array
      */
-    protected $fillable = ['code', 'name'];
+    protected $fillable = ['code', 'name', 'permission'];
 
     /**
      * @return BelongsToMany
