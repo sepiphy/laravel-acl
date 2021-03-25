@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Unit\Sepiphy\Laravel\Acl;
+namespace Tests\Sepiphy\Laravel\Acl;
 
 use PHPUnit\Framework\TestCase;
 use Sepiphy\Laravel\Acl\HasAcl;
