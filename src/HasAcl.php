@@ -70,12 +70,21 @@ trait HasAcl
     }
 
     /**
-     * @param  string|Role  $role
+     * @param  string|RoleInterface  $role
      * @return bool
      */
-    public function hasRole($role)
+    public function hasRole($role): bool
     {
-        $role = $role instanceof Role ? $role->code : $role;
+        if (!is_string($role) || !$role instanceof RoleInterface) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    '$role must be a string or an instanceof %s. [%s] was given.',
+                    [RoleInterface::class, is_object($role) ? get_class($role) : get_type($role)]
+                )
+            );
+        }
+
+        $role = $role instanceof RoleInterface ? $role->getCode() : $role;
 
         foreach (static::$beforeHasRoleCallbacks as $callback) {
             $result = $callback($role, $this);
@@ -89,12 +98,41 @@ trait HasAcl
     }
 
     /**
-     * @param  string|Permission  $permission
+     * @param  string[]|RoleInterface[]  $roles
+     * @param  bool  $requireAll
      * @return bool
+     *
+     * @throws InvalidArgumentException
      */
-    public function hasPermission($permission)
+    public function hasRoles($roles, bool $requireAll = false): bool
     {
-        $permission = $permission instanceof Permission ? $permission->code : $permission;
+        $count = 0;
+
+        foreach ($roles as $role) {
+            $checked = $this->hasRole($role);
+
+            if ($checked && !$requireAll) {
+                return true;
+            }
+
+            $count++;
+        }
+
+        return $count === count($roles);
+    }
+
+    public function hasPermission($permission): bool;
+    {
+        if (!is_string($role) || !$role instanceof PermissionInterface) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    '$permission must be a string or an instanceof %s. [%s] was given.',
+                    [PermissionInterface::class, is_object($permission) ? get_class($permission) : get_type($permission)]
+                )
+            );
+        }
+
+        $permission = $permission instanceof RoleInterface ? $permission->getCode() : $permission;
 
         foreach (static::$beforeHasPermissionCallbacks as $callback) {
             $result = $callback($permission, $this);
@@ -107,5 +145,22 @@ trait HasAcl
         return $this->roles->contains(function ($role) use ($permission) {
             return $role->permissions->contains('code', $permission);
         });
+    }
+
+    public function hasPermissions($permissions, bool $requireAll = false): bool;
+    {
+        $count = 0;
+
+        foreach ($permissions as $permission) {
+            $checked = $this->hasPermission($permission);
+
+            if ($checked && !$requireAll) {
+                return true;
+            }
+
+            $count++;
+        }
+
+        return $count === count($permissions);
     }
 }

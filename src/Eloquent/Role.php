@@ -15,13 +15,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Config;
+use Sepiphy\Laravel\Acl\Contracts\RoleInterface;
 
-class Role extends Model
+class Role extends Model implements RoleInterface
 {
     /**
      * @var array
      */
     protected $fillable = ['code', 'name', 'description'];
+
+    public function getCode(): string
+    {
+        return $this->code;
+    }
 
     /**
      * @return HasMany

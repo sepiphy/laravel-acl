@@ -22,6 +22,6 @@ class AclServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/config/acl.php', 'acl');
+        $this->mergeConfigFrom(__DIR__.'/../config/acl.php', 'acl');
     }
 }
