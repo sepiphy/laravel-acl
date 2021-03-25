@@ -22,7 +22,7 @@ class Role extends Model implements RoleInterface
     /**
      * @var array
      */
-    protected $fillable = ['code', 'name', 'description'];
+    protected $fillable = ['code', 'name', 'description', 'hidden'];
 
     public function getCode(): string
     {

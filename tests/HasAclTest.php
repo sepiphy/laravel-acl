@@ -11,19 +11,67 @@
 
 namespace Tests\Sepiphy\Laravel\Acl;
 
+use Illuminate\Database\Capsule\Manager;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Schema;
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
-use Sepiphy\Laravel\Acl\HasAcl;
+use Orchestra\Testbench\TestCase;
 use Sepiphy\Laravel\Acl\Eloquent\Role;
 use Sepiphy\Laravel\Acl\Eloquent\Permission;
+use Sepiphy\Laravel\Acl\HasAcl;
 
 class HasAclTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->createTables();
+    }
+
     protected function tearDown(): void
     {
-        $user = new class() { use HasAcl; };
+        parent::tearDown();
+
+        $user = new User();
         $user->clearBeforeHasRoleCallbacks();
         $user->clearBeforeHasPermissionCallbacks();
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [\Sepiphy\Laravel\Acl\AclServiceProvider::class];
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']->set('database.default', 'default');
+        $app['config']->set('database.connections.default', [
+            'driver'   => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => '',
+        ]);
+    }
+
+    private function createTables(): void
+    {
+        $migrations = collect([
+            CreateUsersTable::class,
+            \CreateRolesTable::class,
+            \CreateRoleUserTable::class,
+            \CreatePermissionsTable::class,
+            \CreatePermissionRoleTable::class,
+        ]);
+
+        $migrations->each(function (string $migration) {
+            $this->app[$migration]->down();
+        });
+
+        $migrations->each(function (string $migration) {
+            $this->app[$migration]->up();
+        });
     }
 
     public function testHasRole()
@@ -343,5 +391,93 @@ class HasAclTest extends TestCase
         $this->assertTrue($user->hasPermissions(['viewScreen1', 'viewScreen2', 'viewScreen4', 'viewScreen5']));
 
         $this->assertFalse($user->hasPermissions(['viewScreen4', 'viewScreen5', 'viewScreen6']));
+    }
+
+    public function testAssignRoleWithString()
+    {
+        $user = User::create(['name' => 'Quynh']);
+
+        $this->assertFalse($user->hasRole('manager'));
+
+        $role = Role::create(['code' => 'manager', 'name' => 'Manager']);
+
+        $user->assignRole('manager');
+
+        $this->assertTrue($user->hasRole('manager'));
+    }
+
+    public function testAssignRoleWithObject()
+    {
+        $user = User::create(['name' => 'Quynh']);
+
+        $this->assertFalse($user->hasRole('manager'));
+
+        $role = Role::create(['code' => 'manager', 'name' => 'Manager']);
+
+        $user->assignRole($role);
+
+        $this->assertTrue($user->hasRole('manager'));
+    }
+
+    public function testAssignRoleReceivesInvalidArgument()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('$role must be a string or an instance of Sepiphy\Laravel\Acl\Contracts\RoleInterface. [integer] was given.');
+
+        $user = User::create(['name' => 'Quynh']);
+
+        $user->assignRole(12345);
+    }
+
+    public function testRevokeRole()
+    {
+        // TODO
+    }
+
+    public function testAssignPermission()
+    {
+        $user = User::create(['name' => 'Quynh']);
+        Permission::create(['code' => 'view-product-list', 'name' => 'View Product List']);
+
+        $this->assertFalse($user->hasPermission('view-product-list'));
+
+        $user->assignPermission('view-product-list');
+
+        $this->assertTrue($user->hasPermission('view-product-list'));
+    }
+
+    public function testRevokePermission()
+    {
+        $user = User::create(['name' => 'Quynh']);
+        Permission::create(['code' => 'view-product-list', 'name' => 'View Product List']);
+        $user->assignPermission('view-product-list');
+
+        $user->revokePermission('view-product-list');
+
+        $this->assertFalse($user->hasPermission('view-product-list'));
+    }
+}
+
+class User extends Model
+{
+    use HasAcl;
+
+    protected $fillable = ['name'];
+}
+
+class CreateUsersTable
+{
+    public function up()
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name')->unique();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('users');
     }
 }

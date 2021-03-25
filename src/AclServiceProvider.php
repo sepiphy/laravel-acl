@@ -24,4 +24,19 @@ class AclServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/acl.php', 'acl');
     }
+
+    /**
+     * Bootstrap any package services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->loadMigrationsFrom(__DIR__.'/../migrations');
+
+        $this->publishes([
+            __DIR__.'/../config' => $this->app->configPath('acl'),
+            __DIR__.'/../migrations' => $this->app->databasePath('migrations'),
+        ], 'laravel-acl');
+    }
 }

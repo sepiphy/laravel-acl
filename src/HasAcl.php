@@ -11,6 +11,7 @@
 
 namespace Sepiphy\Laravel\Acl;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use InvalidArgumentException;
 use Sepiphy\Laravel\Acl\Contracts\PermissionInterface;
@@ -98,6 +99,10 @@ trait HasAcl
             }
         }
 
+        if ($this instanceof Model) {
+            $this->load('roles', 'roles.permissions');
+        }
+
         return $this->roles->contains('code', $role);
     }
 
@@ -148,6 +153,10 @@ trait HasAcl
             }
         }
 
+        if ($this instanceof Model) {
+            $this->load('roles', 'roles.permissions');
+        }
+
         return $this->roles->contains(function ($role) use ($permission) {
             return $role->permissions->contains('code', $permission);
         });
@@ -170,5 +179,72 @@ trait HasAcl
         }
 
         return $count === count($permissions);
+    }
+
+    public function assignRole($role)
+    {
+        if (!is_string($role) && !$role instanceof RoleInterface) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    '$role must be a string or an instance of %s. [%s] was given.',
+                    RoleInterface::class,
+                    is_object($role) ? get_class($role) : gettype($role)
+                )
+            );
+        }
+
+        $code = $role instanceof RoleInterface ? $role->getCode() : $role;
+
+        $roleModel = app(Config::get('acl.eloquent.role'));
+
+        $role = $roleModel->whereCode($code)->firstOrFail();
+
+        return $this->roles()->attach($role->getKey());
+    }
+
+    public function revokeRole($role)
+    {
+        $code = $role instanceof RoleInterface ? $role->getCode() : $role;
+
+        $roleModel = app(Config::get('acl.eloquent.role'));
+
+        $role = $roleModel->whereCode($code)->firstOrFail();
+
+        return $this->roles()->detach($role->getKey());
+    }
+
+    public function assignPermission($permission)
+    {
+        $code = $permission instanceof PermissionInterface ? $role->getCode() : $permission;
+
+        $permissionModel = app(Config::get('acl.eloquent.permission'));
+
+        $permission = $permissionModel->whereCode($code)->firstOrFail();
+
+        return $this->getDefaultRole()->permissions()->attach($permission->getKey());
+    }
+
+    protected function getDefaultRole(): Role
+    {
+        $code = $this->getKey().'_default';
+
+        $role = Role::firstOrCreate(['code' => $code], ['name' => $code, 'hidden' => true]);
+
+        if (!$this->hasRole($code)) {
+            $this->roles()->attach($role->getKey());
+        }
+
+        return $role;
+    }
+
+    public function revokePermission($permission)
+    {
+        $code = $permission instanceof PermissionInterface ? $role->getCode() : $permission;
+
+        $permissionModel = app(Config::get('acl.eloquent.permission'));
+
+        $permission = $permissionModel->whereCode($code)->firstOrFail();
+
+        return $this->getDefaultRole()->permissions()->detach($permission->getKey());
     }
 }

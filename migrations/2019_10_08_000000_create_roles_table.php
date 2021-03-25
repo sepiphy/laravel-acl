@@ -28,6 +28,7 @@ class CreateRolesTable extends Migration
             $table->string('code')->unique();
             $table->string('name')->unique();
             $table->text('description')->nullable();
+            $table->boolean('hidden')->default(false);
             $table->timestamps();
         });
     }
