@@ -1,0 +1,50 @@
+{
+    "name": "sepiphy/laravel-acl",
+    "description": "The sepiphy/laravel-acl package",
+    "keywords": [
+        "sepiphy", "laravel", "laravel-acl", "acl"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/sepiphy/laravel-acl",
+    "support": {
+        "issues": "https://github.com/sepiphy/laravel-acl/issues",
+        "source": "https://github.com/sepiphy/laravel-acl"
+    },
+    "authors": [
+        {
+            "name": "Quynh Xuan Nguyen",
+            "email": "seriquynh@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.0",
+        "illuminate/database": "^5.8 | ^6.20.14 | ^7.0 | ^8.0",
+        "illuminate/support": "^5.8 | ^6.20.14 | ^7.0 | ^8.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "mockery/mockery": "^1.4",
+        "phpunit/phpunit": "^8.5.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sepiphy\\Laravel\\Acl\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Sepiphy\\Laravel\\Acl\\AclServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
