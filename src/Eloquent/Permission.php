@@ -28,6 +28,16 @@ class Permission extends Model implements PermissionInterface
         return $this->code;
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
     /**
      * @return BelongsToMany
      */

@@ -12,6 +12,9 @@
 namespace Sepiphy\Laravel\Acl;
 
 use Illuminate\Support\Facades\Config;
+use InvalidArgumentException;
+use Sepiphy\Laravel\Acl\Contracts\PermissionInterface;
+use Sepiphy\Laravel\Acl\Contracts\RoleInterface;
 use Sepiphy\Laravel\Acl\Eloquent\Permission;
 use Sepiphy\Laravel\Acl\Eloquent\Role;
 
@@ -75,11 +78,12 @@ trait HasAcl
      */
     public function hasRole($role): bool
     {
-        if (!is_string($role) || !$role instanceof RoleInterface) {
+        if (!is_string($role) && !$role instanceof RoleInterface) {
             throw new InvalidArgumentException(
                 sprintf(
-                    '$role must be a string or an instanceof %s. [%s] was given.',
-                    [RoleInterface::class, is_object($role) ? get_class($role) : get_type($role)]
+                    '$role must be a string or an instance of %s. [%s] was given.',
+                    RoleInterface::class,
+                    is_object($role) ? get_class($role) : gettype($role)
                 )
             );
         }
@@ -111,28 +115,30 @@ trait HasAcl
         foreach ($roles as $role) {
             $checked = $this->hasRole($role);
 
-            if ($checked && !$requireAll) {
-                return true;
+            if ($checked) {
+                if (!$requireAll) {
+                    return true;
+                }
+                $count++;
             }
-
-            $count++;
         }
 
         return $count === count($roles);
     }
 
-    public function hasPermission($permission): bool;
+    public function hasPermission($permission): bool
     {
-        if (!is_string($role) || !$role instanceof PermissionInterface) {
+        if (!is_string($permission) && !$permission instanceof PermissionInterface) {
             throw new InvalidArgumentException(
                 sprintf(
-                    '$permission must be a string or an instanceof %s. [%s] was given.',
-                    [PermissionInterface::class, is_object($permission) ? get_class($permission) : get_type($permission)]
+                    '$permission must be a string or an instance of %s. [%s] was given.',
+                    PermissionInterface::class,
+                    is_object($permission) ? get_class($permission) : gettype($permission)
                 )
             );
         }
 
-        $permission = $permission instanceof RoleInterface ? $permission->getCode() : $permission;
+        $permission = $permission instanceof PermissionInterface ? $permission->getCode() : $permission;
 
         foreach (static::$beforeHasPermissionCallbacks as $callback) {
             $result = $callback($permission, $this);
@@ -147,18 +153,20 @@ trait HasAcl
         });
     }
 
-    public function hasPermissions($permissions, bool $requireAll = false): bool;
+    public function hasPermissions($permissions, bool $requireAll = false): bool
     {
         $count = 0;
 
         foreach ($permissions as $permission) {
             $checked = $this->hasPermission($permission);
 
-            if ($checked && !$requireAll) {
-                return true;
-            }
+            if ($checked) {
+                if (!$requireAll) {
+                    return true;
+                }
 
-            $count++;
+                $count++;
+            }
         }
 
         return $count === count($permissions);

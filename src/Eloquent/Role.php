@@ -29,6 +29,16 @@ class Role extends Model implements RoleInterface
         return $this->code;
     }
 
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
     /**
      * @return HasMany
      */
