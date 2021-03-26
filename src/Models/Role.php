@@ -9,19 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Sepiphy\Laravel\Acl\Eloquent;
+namespace Sepiphy\Laravel\Acl\Models
+;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Config;
-use Sepiphy\Laravel\Acl\Contracts\PermissionInterface;
+use Sepiphy\Laravel\Acl\Contracts\RoleInterface;
 
-class Permission extends Model implements PermissionInterface
+class Role extends Model implements RoleInterface
 {
     /**
      * @var array
      */
-    protected $fillable = ['code', 'name', 'permission'];
+    protected $fillable = ['code', 'name', 'description', 'hidden'];
 
     public function getCode(): string
     {
@@ -39,10 +41,18 @@ class Permission extends Model implements PermissionInterface
     }
 
     /**
+     * @return HasMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(Config::get('acl.model.user'));
+    }
+
+    /**
      * @return BelongsToMany
      */
-    public function roles()
+    public function permissions()
     {
-        return $this->belongsToMany(Config::get('acl.eloquent.role'));
+        return $this->belongsToMany(Config::get('acl.model.permission'));
     }
 }

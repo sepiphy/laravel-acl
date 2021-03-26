@@ -13,11 +13,10 @@ namespace Sepiphy\Laravel\Acl;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
-use InvalidArgumentException;
 use Sepiphy\Laravel\Acl\Contracts\PermissionInterface;
 use Sepiphy\Laravel\Acl\Contracts\RoleInterface;
-use Sepiphy\Laravel\Acl\Eloquent\Permission;
-use Sepiphy\Laravel\Acl\Eloquent\Role;
+use Sepiphy\Laravel\Acl\Models\Permission;
+use Sepiphy\Laravel\Acl\Models\Role;
 
 trait HasAcl
 {
@@ -70,27 +69,11 @@ trait HasAcl
      */
     public function roles()
     {
-        return $this->belongsToMany(Config::get('acl.eloquent.role'));
+        return $this->belongsToMany(Config::get('acl.model.role'));
     }
 
-    /**
-     * @param  string|RoleInterface  $role
-     * @return bool
-     */
-    public function hasRole($role): bool
+    public function hasRole(string $role): bool
     {
-        if (!is_string($role) && !$role instanceof RoleInterface) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    '$role must be a string or an instance of %s. [%s] was given.',
-                    RoleInterface::class,
-                    is_object($role) ? get_class($role) : gettype($role)
-                )
-            );
-        }
-
-        $role = $role instanceof RoleInterface ? $role->getCode() : $role;
-
         foreach (static::$beforeHasRoleCallbacks as $callback) {
             $result = $callback($role, $this);
 
@@ -106,13 +89,6 @@ trait HasAcl
         return $this->roles->contains('code', $role);
     }
 
-    /**
-     * @param  string[]|RoleInterface[]  $roles
-     * @param  bool  $requireAll
-     * @return bool
-     *
-     * @throws InvalidArgumentException
-     */
     public function hasRoles($roles, bool $requireAll = false): bool
     {
         $count = 0;
@@ -131,20 +107,8 @@ trait HasAcl
         return $count === count($roles);
     }
 
-    public function hasPermission($permission): bool
+    public function hasPermission(string $permission): bool
     {
-        if (!is_string($permission) && !$permission instanceof PermissionInterface) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    '$permission must be a string or an instance of %s. [%s] was given.',
-                    PermissionInterface::class,
-                    is_object($permission) ? get_class($permission) : gettype($permission)
-                )
-            );
-        }
-
-        $permission = $permission instanceof PermissionInterface ? $permission->getCode() : $permission;
-
         foreach (static::$beforeHasPermissionCallbacks as $callback) {
             $result = $callback($permission, $this);
 
@@ -181,47 +145,35 @@ trait HasAcl
         return $count === count($permissions);
     }
 
-    public function assignRole($role)
+    public function assignRole(string $role)
     {
-        if (!is_string($role) && !$role instanceof RoleInterface) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    '$role must be a string or an instance of %s. [%s] was given.',
-                    RoleInterface::class,
-                    is_object($role) ? get_class($role) : gettype($role)
-                )
-            );
-        }
-
-        $code = $role instanceof RoleInterface ? $role->getCode() : $role;
-
-        $roleModel = app(Config::get('acl.eloquent.role'));
-
-        $role = $roleModel->whereCode($code)->firstOrFail();
+        $role = $this->newRoleModel()->whereCode($role)->firstOrFail();
 
         return $this->roles()->attach($role->getKey());
     }
 
-    public function revokeRole($role)
+    private function newRoleModel(): Role
     {
-        $code = $role instanceof RoleInterface ? $role->getCode() : $role;
+        return app(Config::get('acl.model.role'));
+    }
 
-        $roleModel = app(Config::get('acl.eloquent.role'));
-
-        $role = $roleModel->whereCode($code)->firstOrFail();
+    public function revokeRole(string $role)
+    {
+        $role = $this->newRoleModel()->whereCode($role)->firstOrFail();
 
         return $this->roles()->detach($role->getKey());
     }
 
-    public function assignPermission($permission)
+    public function assignPermission(string $permission)
     {
-        $code = $permission instanceof PermissionInterface ? $role->getCode() : $permission;
-
-        $permissionModel = app(Config::get('acl.eloquent.permission'));
-
-        $permission = $permissionModel->whereCode($code)->firstOrFail();
+        $permission = $this->newPermissionModel()->whereCode($permission)->firstOrFail();
 
         return $this->getDefaultRole()->permissions()->attach($permission->getKey());
+    }
+
+    private function newPermissionModel()
+    {
+        return app(Config::get('acl.model.permission'));
     }
 
     protected function getDefaultRole(): Role
@@ -237,13 +189,9 @@ trait HasAcl
         return $role;
     }
 
-    public function revokePermission($permission)
+    public function revokePermission(string $permission)
     {
-        $code = $permission instanceof PermissionInterface ? $role->getCode() : $permission;
-
-        $permissionModel = app(Config::get('acl.eloquent.permission'));
-
-        $permission = $permissionModel->whereCode($code)->firstOrFail();
+        $permission = $this->newPermissionModel()->whereCode($permission)->firstOrFail();
 
         return $this->getDefaultRole()->permissions()->detach($permission->getKey());
     }

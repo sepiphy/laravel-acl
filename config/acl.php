@@ -11,13 +11,13 @@
 
 return [
 
-    'eloquent' => [
+    'model' => [
 
         'user' => class_exists(App\Models\User::class) ? App\Models\User::class : App\User::class,
 
-        'role' => class_exists(App\Models\Role::class) ? App\Models\Role::class : Sepiphy\Laravel\Acl\Eloquent\Role::class,
+        'role' => class_exists(App\Models\Role::class) ? App\Models\Role::class : Sepiphy\Laravel\Acl\Models\Role::class,
 
-        'permission' => class_exists(App\Models\Permission::class) ? App\Models\Permission::class : Sepiphy\Laravel\Acl\Eloquent\Permission::class,
+        'permission' => class_exists(App\Models\Permission::class) ? App\Models\Permission::class : Sepiphy\Laravel\Acl\Models\Permission::class,
 
     ],
 

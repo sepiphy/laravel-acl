@@ -16,10 +16,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Facades\Schema;
-use InvalidArgumentException;
 use Orchestra\Testbench\TestCase;
-use Sepiphy\Laravel\Acl\Eloquent\Role;
-use Sepiphy\Laravel\Acl\Eloquent\Permission;
+use Sepiphy\Laravel\Acl\Models\Role;
+use Sepiphy\Laravel\Acl\Models\Permission;
 use Sepiphy\Laravel\Acl\HasAcl;
 
 class HasAclTest extends TestCase
@@ -225,82 +224,6 @@ class HasAclTest extends TestCase
         $this->assertTrue($user->hasPermission('viewScreen1'));
     }
 
-    public function testHasRoleReceiveRoleModel()
-    {
-        $user = new class() {
-            use HasAcl;
-
-            public function __construct()
-            {
-                $this->roles = collect([
-                    (object) ['code' => 'developer', 'permissions' => collect([
-                        (object) ['code' => 'viewScreen1'],
-                    ])],
-                ]);
-            }
-        };
-
-        $role = new Role(['code' => 'developer']);
-
-        $this->assertTrue($user->hasRole($role));
-    }
-
-    public function testHasRoleReceivePermissionModel()
-    {
-        $user = new class() {
-            use HasAcl;
-
-            public function __construct()
-            {
-                $this->roles = collect([
-                    (object) ['code' => 'developer', 'permissions' => collect([
-                        (object) ['code' => 'viewScreen1'],
-                    ])],
-                ]);
-            }
-        };
-
-        $permission = new Permission(['code' => 'viewScreen1']);
-
-        $this->assertTrue($user->hasPermission($permission));
-    }
-
-    public function testHasRoleReceivesInvalidArgument()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$role must be a string or an instance of Sepiphy\Laravel\Acl\Contracts\RoleInterface. [integer] was given.');
-
-        $user = new class() { use HasAcl; };
-        $user->hasRole(123);
-    }
-
-    public function testHasRolesReceivesInvalidArgument()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$role must be a string or an instance of Sepiphy\Laravel\Acl\Contracts\RoleInterface. [integer] was given.');
-
-        $user = new class() { use HasAcl; };
-        $user->hasRoles([123]);
-    }
-
-    public function testHasPermissionReceivesInvalidArgument()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$permission must be a string or an instance of Sepiphy\Laravel\Acl\Contracts\PermissionInterface. [integer] was given.');
-
-        $user = new class() { use HasAcl; };
-        $user->hasPermission(123);
-    }
-
-    public function testHasPermissionsReceivesInvalidArgument()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$permission must be a string or an instance of Sepiphy\Laravel\Acl\Contracts\PermissionInterface. [integer] was given.');
-
-        $user = new class() { use HasAcl; };
-        $user->hasPermissions([123]);
-    }
-
     public function testHasAllRoles()
     {
         $user = new class() {
@@ -393,7 +316,7 @@ class HasAclTest extends TestCase
         $this->assertFalse($user->hasPermissions(['viewScreen4', 'viewScreen5', 'viewScreen6']));
     }
 
-    public function testAssignRoleWithString()
+    public function testAssignRole()
     {
         $user = User::create(['name' => 'Quynh']);
 
@@ -406,32 +329,15 @@ class HasAclTest extends TestCase
         $this->assertTrue($user->hasRole('manager'));
     }
 
-    public function testAssignRoleWithObject()
-    {
-        $user = User::create(['name' => 'Quynh']);
-
-        $this->assertFalse($user->hasRole('manager'));
-
-        $role = Role::create(['code' => 'manager', 'name' => 'Manager']);
-
-        $user->assignRole($role);
-
-        $this->assertTrue($user->hasRole('manager'));
-    }
-
-    public function testAssignRoleReceivesInvalidArgument()
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('$role must be a string or an instance of Sepiphy\Laravel\Acl\Contracts\RoleInterface. [integer] was given.');
-
-        $user = User::create(['name' => 'Quynh']);
-
-        $user->assignRole(12345);
-    }
-
     public function testRevokeRole()
     {
-        // TODO
+        $user = User::create(['name' => 'Quynh']);
+        $role = Role::create(['code' => 'manager', 'name' => 'Manager']);
+        $user->assignRole('manager');
+
+        $user->revokeRole('manager');
+
+        $this->assertFalse($user->hasRole('manager'));
     }
 
     public function testAssignPermission()

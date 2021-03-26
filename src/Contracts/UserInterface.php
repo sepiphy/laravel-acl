@@ -2,41 +2,31 @@
 
 namespace Sepiphy\Laravel\Acl\Contracts;
 
-use InvalidArgumentException;
-
 interface UserInterface
 {
     /**
-     * @param  string|RoleInterface  $role
+     * @param  string  $role
      * @return bool
-     *
-     * @throws InvalidArgumentException
      */
-    public function hasRole($role): bool;
+    public function hasRole(string $role): bool;
 
     /**
-     * @param  string[]|RoleInterface[]  $roles
+     * @param  string[]  $roles
      * @param  bool  $requireAll
      * @return bool
-     *
-     * @throws InvalidArgumentException
      */
     public function hasRoles($roles, bool $requireAll = false): bool;
 
     /**
-     * @param  string|PermissionInterface  $permission
+     * @param  string  $permission
      * @return bool
-     *
-     * @throws InvalidArgumentException
      */
-    public function hasPermission($permission);
+    public function hasPermission(string $permission): bool;
 
     /**
-     * @param  string[]|PermissionInterface[]  $permissions
+     * @param  string[]  $permissions
      * @param  bool  $requireAll
      * @return bool
-     *
-     * @throws InvalidArgumentException
      */
     public function hasPermissions($permissions, bool $requireAll = false): bool;
 }
