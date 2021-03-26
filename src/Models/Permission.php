@@ -14,29 +14,13 @@ namespace Sepiphy\Laravel\Acl\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Config;
-use Sepiphy\Laravel\Acl\Contracts\PermissionInterface;
 
-class Permission extends Model implements PermissionInterface
+class Permission extends Model
 {
     /**
      * @var array
      */
     protected $fillable = ['code', 'name', 'permission'];
-
-    public function getCode(): string
-    {
-        return $this->code;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
 
     /**
      * @return BelongsToMany

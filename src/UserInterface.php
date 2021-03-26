@@ -1,6 +1,6 @@
 <?php
 
-namespace Sepiphy\Laravel\Acl\Contracts;
+namespace Sepiphy\Laravel\Acl;
 
 interface UserInterface
 {

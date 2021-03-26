@@ -29,12 +29,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Sepiphy\Laravel\Acl\Contracts\UserInterface;
-use Sepiphy\Laravel\Acl\HasAcl;
+use Sepiphy\Laravel\Acl\UserInterface;
+use Sepiphy\Laravel\Acl\HasRolesPermissions;
 
 class User extends Authenticatable implements UserInterface
 {
-    use HasAcl, HasFactory, Notifiable;
+    use HasRolesPermissions, HasFactory, Notifiable;
 
     //
 }

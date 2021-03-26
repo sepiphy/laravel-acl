@@ -19,9 +19,9 @@ use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase;
 use Sepiphy\Laravel\Acl\Models\Role;
 use Sepiphy\Laravel\Acl\Models\Permission;
-use Sepiphy\Laravel\Acl\HasAcl;
+use Sepiphy\Laravel\Acl\HasRolesPermissions;
 
-class HasAclTest extends TestCase
+class HasRolesPermissionsTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -76,7 +76,7 @@ class HasAclTest extends TestCase
     public function testHasRole()
     {
         $user = new class() {
-            use HasAcl;
+            use HasRolesPermissions;
 
             protected $roles;
 
@@ -95,7 +95,7 @@ class HasAclTest extends TestCase
     public function testHasPermission()
     {
         $user = new class() {
-            use HasAcl;
+            use HasRolesPermissions;
 
             protected $roles;
 
@@ -116,7 +116,7 @@ class HasAclTest extends TestCase
     public function testBeforeHasRole()
     {
         $user = new class() {
-            use HasAcl;
+            use HasRolesPermissions;
 
             protected $roles;
 
@@ -149,7 +149,7 @@ class HasAclTest extends TestCase
     public function testBeforeHasRoleCallbackReceiveUser()
     {
         $user = new class() {
-            use HasAcl;
+            use HasRolesPermissions;
 
             public function __construct()
             {
@@ -171,7 +171,7 @@ class HasAclTest extends TestCase
     public function testBeforeHasPermission()
     {
         $user = new class() {
-            use HasAcl;
+            use HasRolesPermissions;
 
             protected $roles;
 
@@ -205,7 +205,7 @@ class HasAclTest extends TestCase
     public function testBeforeHasPermissionCallbackReceiveUser()
     {
         $user = new class() {
-            use HasAcl;
+            use HasRolesPermissions;
 
             public function __construct()
             {
@@ -227,7 +227,7 @@ class HasAclTest extends TestCase
     public function testHasAllRoles()
     {
         $user = new class() {
-            use HasAcl;
+            use HasRolesPermissions;
 
             protected $roles;
 
@@ -248,7 +248,7 @@ class HasAclTest extends TestCase
     public function testHasAnyRoles()
     {
         $user = new class() {
-            use HasAcl;
+            use HasRolesPermissions;
 
             protected $roles;
 
@@ -270,7 +270,7 @@ class HasAclTest extends TestCase
     public function testHasAllPermissions()
     {
         $user = new class() {
-            use HasAcl;
+            use HasRolesPermissions;
 
             protected $roles;
 
@@ -295,7 +295,7 @@ class HasAclTest extends TestCase
     public function testHasAnyPermissions()
     {
         $user = new class() {
-            use HasAcl;
+            use HasRolesPermissions;
 
             protected $roles;
 
@@ -366,7 +366,7 @@ class HasAclTest extends TestCase
 
 class User extends Model
 {
-    use HasAcl;
+    use HasRolesPermissions;
 
     protected $fillable = ['name'];
 }

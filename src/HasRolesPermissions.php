@@ -18,7 +18,7 @@ use Sepiphy\Laravel\Acl\Contracts\RoleInterface;
 use Sepiphy\Laravel\Acl\Models\Permission;
 use Sepiphy\Laravel\Acl\Models\Role;
 
-trait HasAcl
+trait HasRolesPermissions
 {
     /**
      * @var callable[]

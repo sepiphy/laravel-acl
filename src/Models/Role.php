@@ -9,36 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Sepiphy\Laravel\Acl\Models
-;
+namespace Sepiphy\Laravel\Acl\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Config;
-use Sepiphy\Laravel\Acl\Contracts\RoleInterface;
 
-class Role extends Model implements RoleInterface
+class Role extends Model
 {
     /**
      * @var array
      */
     protected $fillable = ['code', 'name', 'description', 'hidden'];
-
-    public function getCode(): string
-    {
-        return $this->code;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
-    }
 
     /**
      * @return HasMany
