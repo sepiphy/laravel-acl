@@ -60,10 +60,10 @@
         "laravel": {
             "providers": [
                 "Sepiphy\\Laravel\\Acl\\AclServiceProvider"
-            ]
-        },
-        "aliases": {
-            "ACL": "Sepiphy\\Laravel\\Acl\\AclFacade"
+            ],
+            "aliases": {
+                "ACL": "Sepiphy\\Laravel\\Acl\\AclFacade"
+            }
         }
     },
     "config": {
