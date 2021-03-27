@@ -1,0 +1,26 @@
+name: Tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php: ["7.4", "8.0"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install php dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+
+      - name: Run test scripts
+        run: |
+          ./vendor/bin/sphpcs src --standard=Laravel
+          ./vendor/bin/phpstan analyse src --no-progress --ansi
+          ./vendor/bin/phpunit
