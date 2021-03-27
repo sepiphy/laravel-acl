@@ -5,12 +5,10 @@
 ![Packagist Version](https://img.shields.io/packagist/v/sepiphy/laravel-acl.svg?label=version)
 ![GitHub](https://img.shields.io/github/license/sepiphy/laravel-acl.svg)
 
-| Laravel | sepiphy/laravel-acl |
-|---------|---------------------|
-| 5.8 | 3.x |
-| 6.x | 3.x |
-| 7.x | 3.x |
-| 8.x | 3.x |
+| sepiphy/laravel-acl | Laravel version | Status |
+|---------|-----------------------------|--------|
+| 3.x | `^6.0`, `^7.0`, `^8.0` | `maintain`
+| 2.x | `^5.8`, `^6.0`, `^7.0` | `deprecated`
 
 ## Installation
 
