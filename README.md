@@ -1,8 +1,16 @@
 # sepiphy/laravel-acl
 
+![Build](https://img.shields.io/github/workflow/status/sepiphy/laravel-acl/tests)
 ![Packagist](https://img.shields.io/packagist/dt/sepiphy/laravel-acl.svg)
 ![Packagist Version](https://img.shields.io/packagist/v/sepiphy/laravel-acl.svg?label=version)
 ![GitHub](https://img.shields.io/github/license/sepiphy/laravel-acl.svg)
+
+| Laravel | sepiphy/laravel-acl |
+|---------|---------------------|
+| 5.8 | 3.x |
+| 6.x | 3.x |
+| 7.x | 3.x |
+| 8.x | 3.x |
 
 ## Installation
 
@@ -96,4 +104,37 @@ $user->hasRole('developer'); // false
 // Revoke a permission from a user.
 $user->revokePermission('create-product');
 $user->hasPermission('create-product'); // false
+```
+
+Define `role` and `permission` middleware:
+
+```php
+<?php
+
+namespace App\Http;
+
+class Kernel extends HttpKernel
+{
+    protected $routeMiddleware = [
+        /** Other middleware */
+        'role' => \Sepiphy\Laravel\Acl\Http\Middleware\EnsureUserHasRole::class,
+        'permission' => \Sepiphy\Laravel\Acl\Http\Middleware\EnsureUserHasPermission::class,
+    ];
+}
+```
+
+Register a few routes that require `role` or `permission` middleware:
+
+```php
+<?php
+
+Route::get('/report-dashboard', [
+    'middleware' => 'role:manager',
+    'uses' => 'App\Http\Controllers\DashboardController@index',
+]);
+
+Route::get('/products', [
+    'middleware' => 'permission:view-product-list',
+    'uses' => 'App\Http\Controllers\ProductController@index',
+]);
 ```

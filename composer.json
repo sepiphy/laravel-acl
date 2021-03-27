@@ -23,7 +23,7 @@
         "illuminate/support": "^5.8 | ^6.20.14 | ^7.30.3 | ^8.22.1"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.16",
+        "friendsofphp/php-cs-fixer": "^2.18",
         "mockery/mockery": "^1.4",
         "orchestra/testbench": "^6.15",
         "phpunit/phpunit": "^8.5.8"
@@ -46,6 +46,9 @@
             "providers": [
                 "Sepiphy\\Laravel\\Acl\\AclServiceProvider"
             ]
+        },
+        "aliases": {
+            "ACL": "Sepiphy\\Laravel\\Acl\\AclFacade"
         }
     },
     "config": {
