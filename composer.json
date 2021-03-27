@@ -59,10 +59,10 @@
         },
         "laravel": {
             "providers": [
-                "Sepiphy\\Laravel\\Acl\\AclServiceProvider"
+                "Sepiphy\\Laravel\\Acl\\ServiceProvider"
             ],
             "aliases": {
-                "ACL": "Sepiphy\\Laravel\\Acl\\AclFacade"
+                "ACL": "Sepiphy\\Laravel\\Acl\\Facade"
             }
         }
     },

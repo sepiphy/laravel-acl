@@ -39,7 +39,7 @@ class HasRolesPermissionsTest extends TestCase
 
     protected function getPackageProviders($app)
     {
-        return [\Sepiphy\Laravel\Acl\AclServiceProvider::class];
+        return [\Sepiphy\Laravel\Acl\ServiceProvider::class];
     }
 
     protected function getEnvironmentSetUp($app)
@@ -344,15 +344,50 @@ class HasRolesPermissionsTest extends TestCase
         $this->assertTrue($user->hasRole('manager'));
     }
 
+    public function testAssignRoles()
+    {
+        $user = User::create(['name' => 'Quynh']);
+        $role = Role::insert([
+            ['code' => 'developer', 'name' => 'Developer'],
+            ['code' => 'tester', 'name' => 'Tester'],
+        ]);
+
+        $this->assertFalse($user->hasRole('developer', 'tester', true));
+
+        $user->assignRoles(['developer', 'tester']);
+
+        $this->assertTrue($user->hasRole('developer', 'tester', true));
+    }
+
     public function testRevokeRole()
     {
         $user = User::create(['name' => 'Quynh']);
-        $role = Role::create(['code' => 'manager', 'name' => 'Manager']);
+        Role::create(['code' => 'manager', 'name' => 'Manager']);
+
         $user->assignRole('manager');
+
+        $this->assertTrue($user->hasRole('manager'));
 
         $user->revokeRole('manager');
 
         $this->assertFalse($user->hasRole('manager'));
+    }
+
+    public function testRevokeRoles()
+    {
+        $user = User::create(['name' => 'Quynh']);
+        Role::insert([
+            ['code' => 'developer', 'name' => 'Developer'],
+            ['code' => 'tester', 'name' => 'Tester'],
+        ]);
+
+        $user->assignRoles(['developer', 'tester']);
+
+        $this->assertTrue($user->hasRole('developer', 'tester', true));
+
+        $user->revokeRoles(['developer', 'tester']);
+
+        $this->assertFalse($user->hasRole('developer', 'tester', true));
     }
 
     public function testAssignPermission()
@@ -367,6 +402,21 @@ class HasRolesPermissionsTest extends TestCase
         $this->assertTrue($user->hasPermission('view-product-list'));
     }
 
+    public function testAssignPermissions()
+    {
+        $user = User::create(['name' => 'Quynh']);
+        Permission::insert([
+            ['code' => 'view-product-list', 'name' => 'View Product List'],
+            ['code' => 'view-product-detail', 'name' => 'View Product Detail'],
+        ]);
+
+        $this->assertFalse($user->hasPermissions(['view-product-list', 'view-product-detail'], true));
+
+        $user->assignPermissions(['view-product-list', 'view-product-detail']);
+
+        $this->assertTrue($user->hasPermissions(['view-product-list', 'view-product-detail'], true));
+    }
+
     public function testRevokePermission()
     {
         $user = User::create(['name' => 'Quynh']);
@@ -376,6 +426,23 @@ class HasRolesPermissionsTest extends TestCase
         $user->revokePermission('view-product-list');
 
         $this->assertFalse($user->hasPermission('view-product-list'));
+    }
+
+    public function testRevokePermissions()
+    {
+        $user = User::create(['name' => 'Quynh']);
+        Permission::insert([
+            ['code' => 'view-product-list', 'name' => 'View Product List'],
+            ['code' => 'view-product-detail', 'name' => 'View Product Detail'],
+        ]);
+
+        $user->assignPermissions(['view-product-list', 'view-product-detail']);
+
+        $this->assertTrue($user->hasPermissions(['view-product-list', 'view-product-detail'], true));
+
+        $user->revokePermissions(['view-product-list', 'view-product-detail']);
+
+        $this->assertFalse($user->hasPermissions(['view-product-list', 'view-product-detail'], true));
     }
 }
 

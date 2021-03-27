@@ -150,3 +150,5 @@ Route::get('/products', [
     'uses' => 'App\Http\Controllers\ProductController@index',
 ]);
 ```
+
+Use [ACL](./src/Facade.php) facade for quickly access.

@@ -147,7 +147,16 @@ trait HasRolesPermissions
     {
         $role = $this->newRoleModel()->whereCode($role)->firstOrFail();
 
-        return $this->roles()->attach($role->getKey());
+        $this->roles()->attach($role->getKey());
+    }
+
+    public function assignRoles($roles)
+    {
+        $roleModel = $this->newRoleModel();
+
+        $roleKeys = $roleModel->whereIn('code', $roles)->pluck($roleModel->getKeyName());
+
+        $this->roles()->attach($roleKeys);
     }
 
     private function newRoleModel(): Role
@@ -159,14 +168,34 @@ trait HasRolesPermissions
     {
         $role = $this->newRoleModel()->whereCode($role)->firstOrFail();
 
-        return $this->roles()->detach($role->getKey());
+        $this->roles()->detach($role->getKey());
+    }
+
+    public function revokeRoles($roles)
+    {
+        $roleModel = $this->newRoleModel();
+
+        $roleKeys = $roleModel->whereIn('code', $roles)->pluck($roleModel->getKeyName());
+
+        $this->roles()->detach($roleKeys);
     }
 
     public function assignPermission(string $permission)
     {
         $permission = $this->newPermissionModel()->whereCode($permission)->firstOrFail();
 
-        return $this->getDefaultRole()->permissions()->attach($permission->getKey());
+        $this->getDefaultRole()->permissions()->attach($permission->getKey());
+    }
+
+    public function assignPermissions($permissions)
+    {
+        $permissionModel = $this->newPermissionModel();
+
+        $permissionKeys = $permissionModel->whereIn('code', $permissions)->pluck(
+            $permissionModel->getKeyName()
+        );
+
+        $this->getDefaultRole()->permissions()->attach($permissionKeys);
     }
 
     private function newPermissionModel()
@@ -191,6 +220,15 @@ trait HasRolesPermissions
     {
         $permission = $this->newPermissionModel()->whereCode($permission)->firstOrFail();
 
-        return $this->getDefaultRole()->permissions()->detach($permission->getKey());
+        $this->getDefaultRole()->permissions()->detach($permission->getKey());
+    }
+
+    public function revokePermissions($permissions)
+    {
+        $permissionModel = $this->newPermissionModel();
+
+        $permissionKeys = $permissionModel->whereIn('code', $permissions)->pluck($permissionModel->getKeyName());
+
+        $this->getDefaultRole()->permissions()->detach($permissionKeys);
     }
 }

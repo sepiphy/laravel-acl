@@ -9,12 +9,11 @@
 
 namespace Sepiphy\Laravel\Acl;
 
-use Illuminate\Support\ServiceProvider;
-use RuntimeException;
+use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Sepiphy\Laravel\Acl\Http\Middleware\EnsureUserHasPermission;
 use Sepiphy\Laravel\Acl\Http\Middleware\EnsureUserHasRole;
 
-class AclServiceProvider extends ServiceProvider
+class ServiceProvider extends BaseServiceProvider
 {
     /**
      * Register any application services.
@@ -25,8 +24,8 @@ class AclServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/acl.php', 'acl');
 
-        $this->app->singleton(UserInterface::class, function () {
-            return $this->getUser();
+        $this->app->singleton(UserInterface::class, function ($app) {
+            return $app['auth']->user();
         });
 
         $this->app->singleton(EnsureUserHasRole::class, function ($app) {
@@ -51,32 +50,5 @@ class AclServiceProvider extends ServiceProvider
             __DIR__.'/../config' => $this->app->configPath('acl'),
             __DIR__.'/../migrations' => $this->app->databasePath('migrations'),
         ], 'laravel-acl');
-    }
-
-    private function getUser()
-    {
-        $this->ensureUserAuthenticated();
-
-        $this->ensureUserHasRolesPermissions();
-
-        return $this->app['auth']->user();
-    }
-
-    private function ensureUserAuthenticated()
-    {
-        if (!$this->app['auth']->check()) {
-            throw new RuntimeException('There is no authenticated user for now.');
-        }
-    }
-
-    private function ensureUserHasRolesPermissions()
-    {
-        $user = $this->app['auth']->user();
-
-        if (!$user instanceof UserInterface) {
-            throw new RuntimeException(
-                sprintf('The authenticated user must implement %s.', UserInterface::class)
-            );
-        }
     }
 }

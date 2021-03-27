@@ -9,17 +9,21 @@
 
 namespace Sepiphy\Laravel\Acl;
 
-use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Facade as BaseFacade;
 
 /**
  * @method static bool hasRole(string $role)
  * @method static bool hasRoles(string[] $roles, bool $requireAll = false)
  * @method static bool hasPermission(string $permission)
  * @method static bool hasPermissions(string[] $permissions, bool $requireAll = false)
+ * @method static void assignRole(string $role)
+ * @method static void assignRoles(string[] $roles)
+ * @method static void assignPermission(string $permission)
+ * @method static void assignPermissions(string[] $permissions)
  *
  * @see Sepiphy\Laravel\Acl\UserInterface
  */
-class AclFacade extends Facade
+class Facade extends BaseFacade
 {
     /**
      * Get the registered name of the component.
