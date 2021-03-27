@@ -7,6 +7,7 @@
 - Added `Sepiphy\Laravel\Acl\AclFacade` class and it's alias is "ACL".
 
 ### Changed
-- Changed namespace from `Sepiphy\Laravel\Acl\Eloquent` to `Sepiphy\Laravel\Acl\Models`.
+- Renamed namespace from `Sepiphy\Laravel\Acl\Eloquent` to `Sepiphy\Laravel\Acl\Models`.
+- Renamed trait from `Sepiphy\Laravel\Acl\HasAcl` to `Sepiphy\Laravel\Acl\HasRolesPermissions`.
 - Changed configuration key from "eloquent" to "model".
 - Changed `CreateRolesTable` migration (added "hidden" column with boolean type).
