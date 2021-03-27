@@ -78,17 +78,29 @@ Attach, check and revoke roles or permissions:
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Sepiphy\Laravel\Acl\Models\Permission;
+use Sepiphy\Laravel\Acl\Models\Role;
 
-$user = User::whereEmail('developer@example.com')->first();
+$user = User::firstOrCreate(['email' => 'seriquynh@gmail.com'], [
+    'name' => 'Quynh',
+    'password' => Hash::make('secret'),
+]);
 
 // Assign a role to a user.
+$user->hasRole('developer'); // false
 $user->assignRole('developer');
 $user->hasRole('developer'); // true
 
 // Assign permissions to a role.
+$user->hasPermission('view-product-list'); // false
+$user->hasPermission('view-product-detail'); // false
+
+$role = Role::whereCode('developer')->first();
 $role->permissions()->attach(
     Permission::whereIn('code', ['view-product-list', 'view-product-detail'])->pluck('id')->toArray()
 );
+
 $user->hasPermission('view-product-list'); // true
 $user->hasPermission('view-product-detail'); // true
 $user->hasPermission('create-product'); // false

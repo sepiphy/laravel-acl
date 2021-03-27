@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
 /*
- * This file is part of the Seriquynh package.
+ * This file is part of the Sepiphy package.
  * (c) Quynh Xuan Nguyen <seriquynh@gmail.com>
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -65,7 +65,7 @@ class AclServiceProvider extends ServiceProvider
     private function ensureUserAuthenticated()
     {
         if (!$this->app['auth']->check()) {
-            throw new RuntimeException('There is no authenticated user to use %s.', EnsureUserHasRole::class);
+            throw new RuntimeException('There is no authenticated user for now.');
         }
     }
 
@@ -75,7 +75,7 @@ class AclServiceProvider extends ServiceProvider
 
         if (!$user instanceof UserInterface) {
             throw new RuntimeException(
-                sprintf('The authenticated user must an instance of %s.', UserInterface::class)
+                sprintf('The authenticated user must implement %s.', UserInterface::class)
             );
         }
     }
