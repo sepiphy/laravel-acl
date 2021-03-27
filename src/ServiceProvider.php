@@ -47,7 +47,7 @@ class ServiceProvider extends BaseServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../migrations');
 
         $this->publishes([
-            __DIR__.'/../config' => $this->app->configPath('acl'),
+            __DIR__.'/../config' => $this->app->configPath(),
             __DIR__.'/../migrations' => $this->app->databasePath('migrations'),
         ], 'laravel-acl');
     }
