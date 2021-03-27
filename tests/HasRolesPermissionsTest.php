@@ -46,9 +46,9 @@ class HasRolesPermissionsTest extends TestCase
     {
         $app['config']->set('database.default', 'default');
         $app['config']->set('database.connections.default', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'   => '',
+            'prefix' => '',
         ]);
     }
 
@@ -100,9 +100,12 @@ class HasRolesPermissionsTest extends TestCase
             public function __construct()
             {
                 $this->roles = collect([
-                    (object) ['code' => 'developer', 'permissions' => collect([
-                        (object) ['code' => 'viewScreen1'],
-                    ])],
+                    (object) [
+                        'code' => 'developer',
+                        'permissions' => collect([
+                            (object) ['code' => 'viewScreen1'],
+                        ]),
+                    ],
                 ]);
             }
         };
@@ -152,9 +155,12 @@ class HasRolesPermissionsTest extends TestCase
             public function __construct()
             {
                 $this->roles = collect([
-                    (object) ['code' => 'developer', 'permissions' => collect([
-                        (object) ['code' => 'viewScreen1'],
-                    ])],
+                    (object) [
+                        'code' => 'developer',
+                        'permissions' => collect([
+                            (object) ['code' => 'viewScreen1'],
+                        ]),
+                    ],
                 ]);
             }
         };
@@ -176,9 +182,12 @@ class HasRolesPermissionsTest extends TestCase
             public function __construct()
             {
                 $this->roles = collect([
-                    (object) ['code' => 'developer', 'permissions' => collect([
-                        (object) ['code' => 'viewScreen1'],
-                    ])],
+                    (object) [
+                        'code' => 'developer',
+                        'permissions' => collect([
+                            (object) ['code' => 'viewScreen1'],
+                        ]),
+                    ],
                 ]);
             }
         };
@@ -208,9 +217,12 @@ class HasRolesPermissionsTest extends TestCase
             public function __construct()
             {
                 $this->roles = collect([
-                    (object) ['code' => 'developer', 'permissions' => collect([
-                        (object) ['code' => 'viewScreen1'],
-                    ])],
+                    (object) [
+                        'code' => 'developer',
+                        'permissions' => collect([
+                            (object) ['code' => 'viewScreen1'],
+                        ]),
+                    ],
                 ]);
             }
         };
@@ -275,11 +287,13 @@ class HasRolesPermissionsTest extends TestCase
             public function __construct()
             {
                 $this->roles = collect([
-                    (object) ['code' => 'developer', 'permissions' => collect([
-                        (object) ['code' => 'viewScreen1'],
-                        (object) ['code' => 'viewScreen2'],
-                        (object) ['code' => 'viewScreen3'],
-                    ])],
+                    (object) ['code' => 'developer',
+                        'permissions' => collect([
+                            (object) ['code' => 'viewScreen1'],
+                            (object) ['code' => 'viewScreen2'],
+                            (object) ['code' => 'viewScreen3'],
+                        ]),
+                    ],
                 ]);
             }
         };
@@ -300,11 +314,14 @@ class HasRolesPermissionsTest extends TestCase
             public function __construct()
             {
                 $this->roles = collect([
-                    (object) ['code' => 'developer', 'permissions' => collect([
-                        (object) ['code' => 'viewScreen1'],
-                        (object) ['code' => 'viewScreen2'],
-                        (object) ['code' => 'viewScreen3'],
-                    ])],
+                    (object) [
+                        'code' => 'developer',
+                        'permissions' => collect([
+                            (object) ['code' => 'viewScreen1'],
+                            (object) ['code' => 'viewScreen2'],
+                            (object) ['code' => 'viewScreen3'],
+                        ]),
+                    ],
                 ]);
             }
         };
