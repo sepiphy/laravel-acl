@@ -1,6 +1,6 @@
 # sepiphy/laravel-acl
 
-![Build](https://img.shields.io/github/workflow/status/sepiphy/laravel-acl/tests)
+![Tests](https://img.shields.io/github/workflow/status/sepiphy/laravel-acl/tests?label=tests)
 ![Packagist](https://img.shields.io/packagist/dt/sepiphy/laravel-acl.svg)
 ![Packagist Version](https://img.shields.io/packagist/v/sepiphy/laravel-acl.svg?label=version)
 ![GitHub](https://img.shields.io/github/license/sepiphy/laravel-acl.svg)
