@@ -1,4 +1,4 @@
-# sepiphy/laravel-acl
+# Laravel Access Control List
 
 ![Tests](https://img.shields.io/github/workflow/status/sepiphy/laravel-acl/tests?label=tests)
 ![Packagist](https://img.shields.io/packagist/dt/sepiphy/laravel-acl.svg)
