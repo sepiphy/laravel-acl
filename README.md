@@ -12,7 +12,7 @@
 
 ## Installation
 
-Install php dependencies:
+Install this package via composer:
 
 ```bash
 composer require sepiphy/laravel-acl
@@ -24,7 +24,7 @@ Create acl tables including `roles`, `role_user`, `permissions` and `permission_
 php artisan migrate
 ```
 
-Define `User` model class using ACL trait and user interace:
+`User` model class has to implement `UserInterface` and use `HasRolesPermissions` trait:
 
 ```php
 <?php
